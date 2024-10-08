@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing Report</title>
+    <style>
+
+          .responsive-iframe {
+            width: 70vw;
+            height: 70vh;
+            border: none;
+          }
+
+        /* style for inline code like <code> */
+        code, .backtick-code {
+            font-family: Consolas, "Courier New", monospace;
+            background-color: #464646;
+            border: 0px solid #000000;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 90%;
+        }
+
+        video {
+            max-width: 50%;
+            max-height: 100%;
+            flex: 1;
+        }
+
+        /* style specifically for backticked text */
+        .backtick-code::before, .backtick-code::after {
+            content: "`"; /* add backticks around the text */
+            color: #555; /*darker backtick color */
+        }
+
+        .box {
+            border: 1px solid white;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        body {
+            font-family: "Times New Roman", sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #050505;
+            color: #ababab;
+            font-size: 12px;
+        }
+
+        h1, h2, h3, h4 {
+            /*color: #333;*/
+        }
+
+        p {
+            text-align: justify;
+            margin-top: 0.5em;
+            margin-bottom: 1.5em;
+        }
+
+        img {
+            width: 10%;
+            height: auto;
+            margin-bottom: 0.5em;
+            display: block;
+        }
+
+        .img2 {
+            width: 80%;
+            height: auto;
+            margin-bottom: 0.5em;
+            display: block;
+        }
+
+        .img3 {
+            width: 50%;
+            height: auto;
+            margin-bottom: 0.5em;
+            display: block;
+        }
+
+        .img4 {
+            width: 20%;
+            height: auto;
+            margin-bottom: 0.5em;
+            display: block;
+        }
+
+        /* Apply styles to images and video to make them line up */
+        .img5, .image-row2 video {
+            width: 33%; /* Make images and video occupy equal space */
+            height: auto; /* Maintain aspect ratio */
+            max-height: 100%; /* Ensure they don't overflow the container */
+            object-fit: cover; /* Cover the container, cropping if necessary */
+        }
+
+        .image-row2 {
+            display: flex; /* Use flexbox for horizontal alignment */
+            align-items: center; /* Align items vertically in the center */
+            justify-content: space-between; /* Distribute space evenly between items */
+            gap: 10px; /* Optional: Space between images and video */
+            width: 100%; /* Full width of the container */
+            height: 100%; /* Optional: Control height if needed */
+        }
+
+        /*.img5 {*/
+        /*    width: 50%; !* Set the width to fill the entire container *!*/
+        /*    height: auto; !* Set the height to fill the entire container *!*/
+        /*     !* Scale the image to cover the container, cropping if necessary *!*/
+        /*    flex: 1;*/
+        /*}*/
+
+        .collapsible {
+            background-color: #111111;
+            color: grey;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 12px;
+            margin-bottom: 00px;
+            position: relative;
+        }
+
+        .active, .collapsible:hover {
+            background-color: #464646;
+            color: #ababab;
+        }
+
+        .content {
+            padding: 70px;
+            display: none;
+            overflow: hidden;
+            background-color: #151515;
+        }
+
+        .collapsible::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 1px solid;
+            border-radius: 4px;
+
+        }
+
+        .image-row {
+            display: flex; /* --> this makes the images align horizontally */
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .image-row img {
+            max-width: 20%; /* adjust the width of each image */
+            height: auto; /* confirm --> keeps the aspect ratio */
+            object-fit: contain;
+        }
+
+
+    </style>
+    <!-- mathjax configuration + script -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML-full"></script>
+</head>
+<body>
+
+<h1>CS180 Project 3 -- Ryan Nader</h1>
+
+<p>github: https://github.com/berkeleybear22ryan/CS180_Project3</p>
+<p>website: https://berkeleybear22ryan.github.io/CS180_Project3/</p>
+<p>youtube links ...</p>
+<p>1by2 with music: https://youtu.be/7lLSLp_FY-E</p>
+<p>2by3 no music: https://youtu.be/YMR4u9ATedI</p>
+<p>single sample: https://youtube.com/shorts/_67T6Cf6VCE</p>
+<p>ALSO: may need to convert file extension name in order to run i.e. .jpeg to .jpg (as I worked with .jpg) for instance due to my compression on photos.</p>
+
+
+
+
+
+
+
+
+
+
+
+<iframe class="responsive-iframe" src="https://www.youtube.com/embed/7lLSLp_FY-E?autoplay=1&mute=1" title="face morph full transition" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<button class="collapsible">Overview -- PLEASE READ IMPORTANT FOR CONTEXT -- done</button>
+<div class="content">
+    <div class="box">
+        <p>For "my" photo in the first section, I will be using Paris Hilton's photo and will transitioning it to Tavi Gevinson's photo then continue from there.</p>
+        <p>For "my" photo in the second section, I will be using image 40 from the sample data.</p>
+        <p>I attached them both below.</p>
+        <div class="image-row">
+            <img src="./code/images_2/L__0093_MS_Hilton_Paris_CloseUp.jpg" alt="Image 1">
+            <img src="./code/part2_immface/immface_imports/sample_person.jpg" alt="Image 2">
+        </div>
+    </div>
+
+    <div class="box">
+        <p>Also note that all the images are high resolution but because of web limitations I had to compress a lot but even though the video's were greater then 4k you can at least see it in 4k in you go to youtube links.</p>
+    </div>
+
+
+
+    <div class="box">
+        This is the citation for the data that I used for Martin Schoeller.
+        <section>
+            <p>WEBSITE: https://martinschoeller.com/</p>
+        </section>
+    </div>
+
+
+    <div class="box">
+        <p>This is the citation for the data that I used for IMM Face.</p>
+        <p>Also for more info on the dataset please refer to the pdf in folder imm_face_db.</p>
+        <section>
+        <h3>Citation</h3>
+        <p>M. B. Stegmann, B. K. Ersbøll, and R. Larsen. FAME - a flexible appearance modelling environment.
+        <em>IEEE Transactions on Medical Imaging</em>, 22(10):1319-1331, 2003</p>
+        <pre>
+            @ARTICLE{Stegmann2003tmi,
+                author = "M. B. Stegmann and B. K. Ersboll and R. Larsen",
+                title = "{FAME} -- A Flexible Appearance Modelling Environment",
+                year = "2003",
+                pages = "1319-1331",
+                journal = "IEEE Trans. on Medical Imaging",
+                volume = "22",
+                number = "10",
+                publisher = "IEEE"
+            }
+        </pre>
+        </section>
+    </div>
+</div>
+
+
+
+
+
+
+<button class="collapsible">Part 1 -- done</button>
+<div class="content">
+    <p>The code for this is in `a_start1.py` and `a_start2.py`.</p>
+
+    <div class="box">
+        <p>Also these are my preprocessing steps that I used ...</p>
+        <p>I first found the images as follows ... and then I cleaned them by removing the backround and aligning the faces to be close to the same size and area.</p>
+
+        <div class="image-row">
+            <img src="./code/images_1/Abramovic_Marina_13_Fr12_W_F_Steidl_Book.jpg" alt="Marina Abramovic">
+            <p>Marina Abramovic</p>
+
+            <img src="./code/images_1/MS_Adams_Amy_CloseUp.jpg" alt="Amy Adams">
+            <p>Amy Adams</p>
+
+            <img src="./code/images_1/MS_Adele_CloseUp.jpg" alt="Adele">
+            <p>Adele</p>
+
+            <img src="./code/images_1/MS_Alexandria_Ocasia_Cortez.jpg" alt="Alexandria Ocasio-Cortez">
+            <p>Alexandria Ocasio-Cortez</p>
+
+            <img src="./code/images_1/MS_Alyssa_Ratkewitch_Haughwout_CloseUp.jpg" alt="Alyssa Ratkewitch Haughwout">
+            <p>Alyssa Ratkewitch Haughwout</p>
+
+            <img src="./code/images_1/MS_Andre_Agassi.jpg" alt="Andre Agassi">
+            <p>Andre Agassi</p>
+
+            <img src="./code/images_1/MS_Anne_Hathaway_CloseUp.jpg" alt="Anne Hathaway">
+            <p>Anne Hathaway</p>
+
+            <img src="./code/images_1/MS_Arkin_Alan_CloseUp.jpg" alt="Alan Arkin">
+            <p>Alan Arkin</p>
+
+            <img src="./code/images_1/MS_Armani_CloseUp.jpg" alt="Armani">
+            <p>Armani</p>
+
+            <img src="./code/images_1/MS_Bale_Christian_CloseUp.jpg" alt="Christian Bale">
+            <p>Christian Bale</p>
+
+            <img src="./code/images_1/MS_Batsheva_Dagan_Holocaust_Survivors.jpg" alt="Batsheva Dagan">
+            <p>Batsheva Dagan</p>
+
+            <img src="./code/images_1/MS_Bekwynhy_Kayapo.jpg" alt="Bekwynhy Kayapo">
+            <p>Bekwynhy Kayapo</p>
+
+            <img src="./code/images_1/MS_Belafonte_Harry_CloseUp.jpg" alt="Harry Belafonte">
+            <p>Harry Belafonte</p>
+
+            <img src="./code/images_1/MS_Bono_CloseUp.jpg" alt="Bono">
+            <p>Bono</p>
+
+            <img src="./code/images_1/MS_Bryant_Kobe_CloseUp.jpg" alt="Kobe Bryant">
+            <p>Kobe Bryant</p>
+
+            <img src="./code/images_1/MS_Buffet_Warren_CloseUp.jpg" alt="Warren Buffet">
+            <p>Warren Buffet</p>
+
+            <img src="./code/images_1/MS_Chang_David_CloseUp.jpg" alt="David Chang">
+            <p>David Chang</p>
+
+            <img src="./code/images_1/MS_Chastain_Jessica_CloseUp.jpg" alt="Jessica Chastain">
+            <p>Jessica Chastain</p>
+
+            <img src="./code/images_1/MS_Christopher_Walken.jpg" alt="Christopher Walken">
+            <p>Christopher Walken</p>
+
+            <img src="./code/images_1/MS_Clooney_George_CloseUp.jpg" alt="George Clooney">
+            <p>George Clooney</p>
+
+            <img src="./code/images_1/MS_Clint_Eastwood_CloseUp.jpg" alt="Clint Eastwood">
+            <p>Clint Eastwood</p>
+
+            <img src="./code/images_1/MS_Clinton_Hillary_CloseUp.jpg" alt="Hillary Clinton">
+            <p>Hillary Clinton</p>
+
+            <img src="./code/images_1/MS_Cooper_Bradley_CloseUp.jpg" alt="Bradley Cooper">
+            <p>Bradley Cooper</p>
+
+            <img src="./code/images_1/MS_Cornelius_Imani_CloseUp.jpg" alt="Imani Cornelius">
+            <p>Imani Cornelius</p>
+
+            <img src="./code/images_1/MS_Crowe_Russell_CloseUp.jpg" alt="Russell Crowe">
+            <p>Russell Crowe</p>
+
+            <img src="./code/images_1/MS_Curry_Stephen_CloseUp.jpg" alt="Stephen Curry">
+            <p>Stephen Curry</p>
+
+            <img src="./code/images_1/MS_David_Larry_CloseUp.jpg" alt="Larry David">
+            <p>Larry David</p>
+
+            <img src="./code/images_1/MS_DeNiro_Robert_CloseUp.jpg" alt="Robert De Niro">
+            <p>Robert De Niro</p>
+
+            <img src="./code/images_1/MS_Douglas_Gabby_CloseUp.jpg" alt="Gabby Douglas">
+            <p>Gabby Douglas</p>
+
+            <img src="./code/images_1/MS_Drake_CloseUp.jpg" alt="Drake">
+            <p>Drake</p>
+
+            <img src="./code/images_1/MS_Exonerees_Bloodsworth_Kirk.jpg" alt="Kirk Bloodsworth">
+            <p>Kirk Bloodsworth</p>
+
+            <img src="./code/images_1/MS_Exonerees_Damon_Thibodeaux.jpg" alt="Damon Thibodeaux">
+            <p>Damon Thibodeaux</p>
+
+            <img src="./code/images_1/MS_Exonerees_Juan_Melendez.jpg" alt="Juan Melendez">
+            <p>Juan Melendez</p>
+
+            <img src="./code/images_1/MS_Federer_Roger_CloseUp.jpg" alt="Roger Federer">
+            <p>Roger Federer</p>
+
+            <img src="./code/images_1/MS_Franco_James_CloseUp.jpg" alt="James Franco">
+            <p>James Franco</p>
+
+            <img src="./code/images_1/MS_Gates_Bill_CloseUp.jpg" alt="Bill Gates">
+            <p>Bill Gates</p>
+
+            <img src="./code/images_1/MS_Gevinson_Tavi_CloseUp.jpg" alt="Tavi Gevinson">
+            <p>Tavi Gevinson</p>
+
+            <img src="./code/images_1/MS_Gloockler_Harald_BILD_CloseUp.jpg" alt="Harald Gloockler">
+            <p>Harald Gloockler</p>
+
+            <img src="./code/images_1/MS_Hilton_Paris_CloseUp.jpg" alt="Paris Hilton">
+            <p>Paris Hilton</p>
+
+            <img src="./code/images_1/MS_Jack_Nicholson.jpg" alt="Jack Nicholson">
+            <p>Jack Nicholson</p>
+
+            <img src="./code/images_1/MS_James_Lebron_CloseUp.jpg" alt="LeBron James">
+            <p>LeBron James</p>
+
+            <img src="./code/images_1/MS_Jay_Z_CloseUp.jpg" alt="Jay-Z">
+            <p>Jay-Z</p>
+
+            <img src="./code/images_1/MS_Johansson_Marika_FBB.jpg" alt="Marika Johansson">
+            <p>Marika Johansson</p>
+
+            <img src="./code/images_1/MS_John_Elton_CloseUp.jpg" alt="Elton John">
+            <p>Elton John</p>
+
+            <img src="./code/images_1/MS_Johnson_Dwayne_CloseUp.jpg" alt="Dwayne Johnson">
+            <p>Dwayne Johnson</p>
+
+            <img src="./code/images_1/MS_Jordan_Michael_CloseUp.jpg" alt="Michael Jordan">
+            <p>Michael Jordan</p>
+
+            <img src="./code/images_1/MS_Joseph_Homeless.jpg" alt="Joseph Homeless">
+            <p>Joseph Homeless</p>
+
+            <img src="./code/images_1/MS_Judi_Dench_CloseUp.jpg" alt="Judi Dench">
+            <p>Judi Dench</p>
+
+            <img src="./code/images_1/MS_Julia_CloseUp.jpg" alt="Julia">
+            <p>Julia</p>
+
+            <img src="./code/images_1/MS_Kaepernick_Colin_CloseUp.jpg" alt="Colin Kaepernick">
+            <p>Colin Kaepernick</p>
+
+            <img src="./code/images_1/MS_Kloss_Karlie_CloseUp.jpg" alt="Karlie Kloss">
+            <p>Karlie Kloss</p>
+
+            <img src="./code/images_1/MS_Laszewski_Debi_FBB.jpg" alt="Debi Laszewski">
+            <p>Debi Laszewski</p>
+
+            <img src="./code/images_1/MS_Lil_Wayne_CloseUp.jpg" alt="Lil Wayne">
+            <p>Lil Wayne</p>
+
+            <img src="./code/images_1/MS_Low_Joachim_CloseUp.jpg" alt="Joachim Low">
+            <p>Joachim Low</p>
+
+            <img src="./code/images_1/MS_Maffay_Peter_Bild_Zeitung_CloseUp.jpg" alt="Peter Maffay">
+            <p>Peter Maffay</p>
+
+            <img src="./code/images_1/MS_Matthew_Mcconaughey_CloseUp.jpg" alt="Matthew McConaughey">
+            <p>Matthew McConaughey</p>
+
+            <img src="./code/images_1/MS_McGregor_Conor_CloseUp.jpg" alt="Conor McGregor">
+            <p>Conor McGregor</p>
+
+            <img src="./code/images_1/MS_Messi_Lione_CloseUp.jpg" alt="Lione Messi">
+            <p>Lione Messi</p>
+
+            <img src="./code/images_1/MS_Moher_Gayle_FBB.jpg" alt="Gayle Moher">
+            <p>Gayle Moher</p>
+
+            <img src="./code/images_1/MS_Monae_Janelle_CloseUp.jpg" alt="Janelle Monae">
+            <p>Janelle Monae</p>
+
+            <img src="./code/images_1/MS_Murray_Bill_CloseUp.jpg" alt="Bill Murray">
+            <p>Bill Murray</p>
+
+            <img src="./code/images_1/MS_Murray_Lenda_FBB.jpg" alt="Lenda Murray">
+            <p>Lenda Murray</p>
+
+            <img src="./code/images_1/MS_Musk_Elon_CloseUp.jpg" alt="Elon Musk">
+            <p>Elon Musk</p>
+
+            <img src="./code/images_1/MS_Nardi_Nadia_FBB.jpg" alt="Nadia Nardi">
+            <p>Nadia Nardi</p>
+
+            <img src="./code/images_1/MS_Obama_CloseUp.jpg" alt="Barack Obama">
+            <p>Barack Obama</p>
+
+            <img src="./code/images_1/MS_Perry_Katy_CloseUp.jpg" alt="Katy Perry">
+            <p>Katy Perry</p>
+
+            <img src="./code/images_1/MS_Pink_CloseUp.jpg" alt="Pink">
+            <p>Pink</p>
+
+            <img src="./code/images_1/MS_Portman_Natalie_CloseUp.jpg" alt="Natalie Portman">
+            <p>Natalie Portman</p>
+
+            <img src="./code/images_1/MS_Prada_CloseUp.jpg" alt="Prada">
+            <p>Prada</p>
+
+            <img src="./code/images_1/MS_Questlove_CloseUp.jpg" alt="Questlove">
+            <p>Questlove</p>
+
+            <img src="./code/images_1/MS_Rabbi_Schmuley_CloseUp.jpg" alt="Rabbi Schmuley">
+            <p>Rabbi Schmuley</p>
+
+            <img src="./code/images_1/MS_Rihanna_CloseUp.jpg" alt="Rihanna">
+            <p>Rihanna</p>
+
+            <img src="./code/images_1/MS_Schmidt_Eric_CloseUp.jpg" alt="Eric Schmidt">
+            <p>Eric Schmidt</p>
+
+            <img src="./code/images_1/MS_Sears_Ivory_Homeless.jpg" alt="Ivory Sears">
+            <p>Ivory Sears</p>
+
+            <img src="./code/images_1/MS_Sikh_Harpreet_Singh_CloseUp.jpg" alt="Harpreet Singh Sikh">
+            <p>Harpreet Singh Sikh</p>
+
+            <img src="./code/images_1/MS_Streep_Meryl_CloseUp.jpg" alt="Meryl Streep">
+            <p>Meryl Streep</p>
+
+            <img src="./code/images_1/MS_Swift_Taylor_CloseUp.jpg" alt="Taylor Swift">
+            <p>Taylor Swift</p>
+
+            <img src="./code/images_1/MS_Tambor_Jeffery_CloseUp.jpg" alt="Jeffery Tambor">
+            <p>Jeffery Tambor</p>
+
+            <img src="./code/images_1/MS_Timberlake_Justin_CloseUp.jpg" alt="Justin Timberlake">
+            <p>Justin Timberlake</p>
+
+            <img src="./code/images_1/MS_Tyson_Mike_CloseUp.jpg" alt="Mike Tyson">
+            <p>Mike Tyson</p>
+
+            <img src="./code/images_1/MS_Valentino_CloseUp.jpg" alt="Valentino">
+            <p>Valentino</p>
+
+            <img src="./code/images_1/MS_Versace_Donatella_CloseUp.jpg" alt="Donatella Versace">
+            <p>Donatella Versace</p>
+
+            <img src="./code/images_1/MS_Washington_Denzel_CloseUp.jpg" alt="Denzel Washington">
+            <p>Denzel Washington</p>
+
+            <img src="./code/images_1/MS_Watson_Emma_CloseUp.jpg" alt="Emma Watson">
+            <p>Emma Watson</p>
+
+            <img src="./code/images_1/MS_Webber_Mark_CloseUp.jpg" alt="Mark Webber">
+            <p>Mark Webber</p>
+
+            <img src="./code/images_1/MS_West_Kanye_CloseUp.jpg" alt="Kanye West">
+            <p>Kanye West</p>
+
+            <img src="./code/images_1/MS_White_Betty_CloseUp.jpg" alt="Betty White">
+            <p>Betty White</p>
+
+            <img src="./code/images_1/MS_White_Shaun_CloseUp.jpg" alt="Shaun White">
+            <p>Shaun White</p>
+
+            <img src="./code/images_1/MS_Williams_Serena_CloseUp.jpg" alt="Serena Williams">
+            <p>Serena Williams</p>
+
+            <img src="./code/images_1/MS_Winfrey_Oprah_CloseUp.jpg" alt="Oprah Winfrey">
+            <p>Oprah Winfrey</p>
+
+            <img src="./code/images_1/MS_Winter_Santiago_CloseUp.jpg" alt="Santiago Winter">
+            <p>Santiago Winter</p>
+
+            <img src="./code/images_1/MS_Yona_Amit_Holocaust_Survivors_061019_4_Fr11_F.jpg" alt="Yona Amit">
+            <p>Yona Amit</p>
+
+            <img src="./code/images_1/MS_Zidane_CloseUp.jpg" alt="Zidane">
+            <p>Zidane</p>
+
+            <img src="./code/images_1/MS_Zuckerberg_CloseUp.jpg" alt="Zuckerberg">
+            <p>Zuckerberg</p>
+
+            <img src="./code/images_1/Turlington_Christy_MS.jpg" alt="Christy Turlington">
+            <p>Christy Turlington</p>
+        </div>
+
+
+
+    </div>
+
+    <div class="box">
+
+
+        <p>In this I implemented both a way to manually select the points by hand in a_start1.py as well as automating the process.</p>
+        <p>As the instructions mentioned that it would be better to have more points and I wanted to create a longer morph I decided to use the automated way as I got good results when testing.</p>
+        <p>Also another important note is that the automated way also enabled the point mapping to have a consistency to it that I think helped the results a lot.</p>
+        <p>I computed all the points and saved them in `./code/points` and there are 558 points per images and 94 total images.</p>
+        <p>After I used delaunay triangulation as recommended.</p>
+        <p>Here is an example of what it looked like:</p>
+        <div class="image-row">
+            <img src="./code/images_5/composite_0_1.jpg">
+            <img src="./code/images_5/composite_1_2.jpg">
+            <img src="./code/images_5/composite_2_3.jpg">
+            <img src="./code/images_5/composite_3_4.jpg">
+            <img src="./code/images_5/composite_4_5.jpg">
+            <img src="./code/images_5/composite_5_6.jpg">
+            <img src="./code/images_5/composite_6_7.jpg">
+            <img src="./code/images_5/composite_7_8.jpg">
+            <img src="./code/images_5/composite_8_9.jpg">
+            <img src="./code/images_5/composite_9_10.jpg">
+            <img src="./code/images_5/composite_10_11.jpg">
+            <img src="./code/images_5/composite_11_12.jpg">
+            <img src="./code/images_5/composite_12_13.jpg">
+            <img src="./code/images_5/composite_13_14.jpg">
+            <img src="./code/images_5/composite_14_15.jpg">
+            <img src="./code/images_5/composite_15_16.jpg">
+            <img src="./code/images_5/composite_16_17.jpg">
+            <img src="./code/images_5/composite_17_18.jpg">
+            <img src="./code/images_5/composite_18_19.jpg">
+            <img src="./code/images_5/composite_19_20.jpg">
+            <img src="./code/images_5/composite_20_21.jpg">
+            <img src="./code/images_5/composite_21_22.jpg">
+            <img src="./code/images_5/composite_22_23.jpg">
+            <img src="./code/images_5/composite_23_24.jpg">
+            <img src="./code/images_5/composite_24_25.jpg">
+            <img src="./code/images_5/composite_25_26.jpg">
+            <img src="./code/images_5/composite_26_27.jpg">
+            <img src="./code/images_5/composite_27_28.jpg">
+            <img src="./code/images_5/composite_28_29.jpg">
+            <img src="./code/images_5/composite_29_30.jpg">
+            <img src="./code/images_5/composite_30_31.jpg">
+            <img src="./code/images_5/composite_31_32.jpg">
+            <img src="./code/images_5/composite_32_33.jpg">
+            <img src="./code/images_5/composite_33_34.jpg">
+            <img src="./code/images_5/composite_34_35.jpg">
+            <img src="./code/images_5/composite_35_36.jpg">
+            <img src="./code/images_5/composite_36_37.jpg">
+            <img src="./code/images_5/composite_37_38.jpg">
+            <img src="./code/images_5/composite_38_39.jpg">
+            <img src="./code/images_5/composite_39_40.jpg">
+            <img src="./code/images_5/composite_40_41.jpg">
+            <img src="./code/images_5/composite_41_42.jpg">
+            <img src="./code/images_5/composite_42_43.jpg">
+            <img src="./code/images_5/composite_43_44.jpg">
+            <img src="./code/images_5/composite_44_45.jpg">
+            <img src="./code/images_5/composite_45_46.jpg">
+            <img src="./code/images_5/composite_46_47.jpg">
+            <img src="./code/images_5/composite_47_48.jpg">
+            <img src="./code/images_5/composite_48_49.jpg">
+            <img src="./code/images_5/composite_49_50.jpg">
+            <img src="./code/images_5/composite_50_51.jpg">
+            <img src="./code/images_5/composite_51_52.jpg">
+            <img src="./code/images_5/composite_52_53.jpg">
+            <img src="./code/images_5/composite_53_54.jpg">
+            <img src="./code/images_5/composite_54_55.jpg">
+            <img src="./code/images_5/composite_55_56.jpg">
+            <img src="./code/images_5/composite_56_57.jpg">
+            <img src="./code/images_5/composite_57_58.jpg">
+            <img src="./code/images_5/composite_58_59.jpg">
+            <img src="./code/images_5/composite_59_60.jpg">
+            <img src="./code/images_5/composite_60_61.jpg">
+            <img src="./code/images_5/composite_61_62.jpg">
+            <img src="./code/images_5/composite_62_63.jpg">
+            <img src="./code/images_5/composite_63_64.jpg">
+            <img src="./code/images_5/composite_64_65.jpg">
+            <img src="./code/images_5/composite_65_66.jpg">
+            <img src="./code/images_5/composite_66_67.jpg">
+            <img src="./code/images_5/composite_67_68.jpg">
+            <img src="./code/images_5/composite_68_69.jpg">
+            <img src="./code/images_5/composite_69_70.jpg">
+            <img src="./code/images_5/composite_70_71.jpg">
+            <img src="./code/images_5/composite_71_72.jpg">
+            <img src="./code/images_5/composite_72_73.jpg">
+            <img src="./code/images_5/composite_73_74.jpg">
+            <img src="./code/images_5/composite_74_75.jpg">
+            <img src="./code/images_5/composite_75_76.jpg">
+            <img src="./code/images_5/composite_76_77.jpg">
+            <img src="./code/images_5/composite_77_78.jpg">
+            <img src="./code/images_5/composite_78_79.jpg">
+            <img src="./code/images_5/composite_79_80.jpg">
+            <img src="./code/images_5/composite_80_81.jpg">
+            <img src="./code/images_5/composite_81_82.jpg">
+            <img src="./code/images_5/composite_82_83.jpg">
+            <img src="./code/images_5/composite_83_84.jpg">
+            <img src="./code/images_5/composite_84_85.jpg">
+            <img src="./code/images_5/composite_85_86.jpg">
+            <img src="./code/images_5/composite_86_87.jpg">
+            <img src="./code/images_5/composite_87_88.jpg">
+            <img src="./code/images_5/composite_88_89.jpg">
+            <img src="./code/images_5/composite_89_90.jpg">
+            <img src="./code/images_5/composite_90_91.jpg">
+            <img src="./code/images_5/composite_91_92.jpg">
+            <img src="./code/images_5/composite_92_93.jpg">
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<button class="collapsible">Part 2 -- done</button>
+<div class="content">
+    <p>The code for this is in `a_start3.py`.</p>
+    <p>Here is an `A` and `B` image and a `midway faces` that I got ...</p>
+    <div class="image-row">
+        <img src="./code/images_2/L__0093_MS_Hilton_Paris_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_0_1.jpg">
+        <img src="./code/images_2/L__0092_MS_Gevinson_Tavi_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0092_MS_Gevinson_Tavi_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_1_2.jpg">
+        <img src="./code/images_2/L__0091_MS_Kloss_Karlie_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0091_MS_Kloss_Karlie_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_2_3.jpg">
+        <img src="./code/images_2/L__0090_MS_Swift_Taylor_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0090_MS_Swift_Taylor_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_3_4.jpg">
+        <img src="./code/images_2/L__0089_MS_Watson_Emma_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0089_MS_Watson_Emma_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_4_5.jpg">
+        <img src="./code/images_2/L__0088_MS_Portman_Natalie_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0088_MS_Portman_Natalie_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_5_6.jpg">
+        <img src="./code/images_2/L__0087_MS_Anne_Hathaway_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0087_MS_Anne_Hathaway_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_6_7.jpg">
+        <img src="./code/images_2/L__0086_MS_Perry_Katy_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0086_MS_Perry_Katy_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_7_8.jpg">
+        <img src="./code/images_2/L__0085_MS_Pink_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0085_MS_Pink_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_8_9.jpg">
+        <img src="./code/images_2/L__0084_MS_Chastain_Jessica_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0084_MS_Chastain_Jessica_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_9_10.jpg">
+        <img src="./code/images_2/L__0083_MS_Adams_Amy_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0083_MS_Adams_Amy_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_10_11.jpg">
+        <img src="./code/images_2/L__0082_MS_Adele_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0082_MS_Adele_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_11_12.jpg">
+        <img src="./code/images_2/L__0081_MS_Versace_Donatella_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0081_MS_Versace_Donatella_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_12_13.jpg">
+        <img src="./code/images_2/L__0080_MS_Johansson_Marika_FBB.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0080_MS_Johansson_Marika_FBB.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_13_14.jpg">
+        <img src="./code/images_2/L__0079_MS_Moher_Gayle_FBB.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0079_MS_Moher_Gayle_FBB.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_14_15.jpg">
+        <img src="./code/images_2/L__0078_MS_Laszewski_Debi_FBB.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0078_MS_Laszewski_Debi_FBB.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_15_16.jpg">
+        <img src="./code/images_2/L__0077_Abramovic_Marina_13_Fr12_W_F_Steidl_Book.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0077_Abramovic_Marina_13_Fr12_W_F_Steidl_Book.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_16_17.jpg">
+        <img src="./code/images_2/L__0076_MS_Prada_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0076_MS_Prada_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_17_18.jpg">
+        <img src="./code/images_2/L__0075_MS_Streep_Meryl_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0075_MS_Streep_Meryl_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_18_19.jpg">
+        <img src="./code/images_2/L__0074_MS_Clinton_Hillary_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0074_MS_Clinton_Hillary_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_19_20.jpg">
+        <img src="./code/images_2/L__0073_MS_Alyssa_Ratkewitch_Haughwout_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0073_MS_Alyssa_Ratkewitch_Haughwout_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_20_21.jpg">
+        <img src="./code/images_2/L__0072_MS_Zidane_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0072_MS_Zidane_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_21_22.jpg">
+        <img src="./code/images_2/L__0071_MS_Andre_Agassi.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0071_MS_Andre_Agassi.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_22_23.jpg">
+        <img src="./code/images_2/L__0070_MS_Clooney_George_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0070_MS_Clooney_George_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_23_24.jpg">
+        <img src="./code/images_2/L__0069_MS_Federer_Roger_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0069_MS_Federer_Roger_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_24_25.jpg">
+        <img src="./code/images_2/L__0068_MS_Franco_James_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0068_MS_Franco_James_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_25_26.jpg">
+        <img src="./code/images_2/L__0067_MS_Crowe_Russell_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0067_MS_Crowe_Russell_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_26_27.jpg">
+        <img src="./code/images_2/L__0066_MS_Cooper_Bradley_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0066_MS_Cooper_Bradley_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_27_28.jpg">
+        <img src="./code/images_2/L__0065_MS_Bale_Christian_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0065_MS_Bale_Christian_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_28_29.jpg">
+        <img src="./code/images_2/L__0064_MS_Bono_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0064_MS_Bono_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_29_30.jpg">
+        <img src="./code/images_2/L__0063_MS_Webber_Mark_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0063_MS_Webber_Mark_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_30_31.jpg">
+        <img src="./code/images_2/L__0062_MS_John_Elton_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0062_MS_John_Elton_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_31_32.jpg">
+        <img src="./code/images_2/L__0061_MS_Gloockler_Harald_BILD_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0061_MS_Gloockler_Harald_BILD_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_32_33.jpg">
+        <img src="./code/images_2/L__0060_MS_Chang_David_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0060_MS_Chang_David_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_33_34.jpg">
+        <img src="./code/images_2/L__0059_MS_Jay_Z_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0059_MS_Jay_Z_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_34_35.jpg">
+        <img src="./code/images_2/L__0058_MS_Johnson_Dwayne_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0058_MS_Johnson_Dwayne_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_35_36.jpg">
+        <img src="./code/images_2/L__0057_MS_Joseph_Homeless.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0057_MS_Joseph_Homeless.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_36_37.jpg">
+        <img src="./code/images_2/L__0056_MS_Kaepernick_Colin_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0056_MS_Kaepernick_Colin_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_37_38.jpg">
+        <img src="./code/images_2/L__0055_MS_Jordan_Michael_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0055_MS_Jordan_Michael_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_38_39.jpg">
+        <img src="./code/images_2/L__0054_MS_Bryant_Kobe_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0054_MS_Bryant_Kobe_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_39_40.jpg">
+        <img src="./code/images_2/L__0053_MS_James_Lebron_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0053_MS_James_Lebron_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_40_41.jpg">
+        <img src="./code/images_2/L__0052_MS_Lil_Wayne_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0052_MS_Lil_Wayne_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_41_42.jpg">
+        <img src="./code/images_2/L__0051_MS_Matthew_Mcconaughey_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0051_MS_Matthew_Mcconaughey_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_42_43.jpg">
+        <img src="./code/images_2/L__0050_MS_McGregor_Conor_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0050_MS_McGregor_Conor_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_43_44.jpg">
+        <img src="./code/images_2/L__0049_MS_Musk_Elon_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0049_MS_Musk_Elon_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_44_45.jpg">
+        <img src="./code/images_2/L__0048_MS_Zuckerberg_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0048_MS_Zuckerberg_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_45_46.jpg">
+        <img src="./code/images_2/L__0047_MS_White_Shaun_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0047_MS_White_Shaun_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_46_47.jpg">
+        <img src="./code/images_2/L__0046_MS_Timberlake_Justin_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0046_MS_Timberlake_Justin_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_47_48.jpg">
+        <img src="./code/images_2/L__0045_MS_Messi_Lione_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0045_MS_Messi_Lione_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_48_49.jpg">
+        <img src="./code/images_2/L__0044_MS_Alexandria_Ocasia_Cortez.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0044_MS_Alexandria_Ocasia_Cortez.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_49_50.jpg">
+        <img src="./code/images_2/L__0043_MS_Bekwynhy_Kayapo.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0043_MS_Bekwynhy_Kayapo.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_50_51.jpg">
+        <img src="./code/images_2/L__0042_MS_Sikh_Harpreet_Singh_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0042_MS_Sikh_Harpreet_Singh_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_51_52.jpg">
+        <img src="./code/images_2/L__0041_MS_Drake_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0041_MS_Drake_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_52_53.jpg">
+        <img src="./code/images_2/L__0040_MS_Curry_Stephen_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0040_MS_Curry_Stephen_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_53_54.jpg">
+        <img src="./code/images_2/L__0039_MS_Julia_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0039_MS_Julia_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_54_55.jpg">
+        <img src="./code/images_2/L__0038_MS_Belafonte_Harry_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0038_MS_Belafonte_Harry_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_55_56.jpg">
+        <img src="./code/images_2/L__0037_MS_Sears_Ivory_Homeless.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0037_MS_Sears_Ivory_Homeless.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_56_57.jpg">
+        <img src="./code/images_2/L__0036_MS_Obama_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0036_MS_Obama_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_57_58.jpg">
+        <img src="./code/images_2/L__0035_MS_Washington_Denzel_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0035_MS_Washington_Denzel_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_58_59.jpg">
+        <img src="./code/images_2/L__0034_MS_Tyson_Mike_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0034_MS_Tyson_Mike_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_59_60.jpg">
+        <img src="./code/images_2/L__0033_MS_West_Kanye_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0033_MS_West_Kanye_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_60_61.jpg">
+        <img src="./code/images_2/L__0032_MS_Questlove_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0032_MS_Questlove_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_61_62.jpg">
+        <img src="./code/images_2/L__0031_MS_Winfrey_Oprah_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0031_MS_Winfrey_Oprah_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_62_63.jpg">
+        <img src="./code/images_2/L__0030_MS_Williams_Serena_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0030_MS_Williams_Serena_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_63_64.jpg">
+        <img src="./code/images_2/L__0029_MS_Douglas_Gabby_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0029_MS_Douglas_Gabby_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_64_65.jpg">
+        <img src="./code/images_2/L__0028_MS_Rihanna_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0028_MS_Rihanna_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_65_66.jpg">
+        <img src="./code/images_2/L__0027_MS_Monae_Janelle_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0027_MS_Monae_Janelle_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_66_67.jpg">
+        <img src="./code/images_2/L__0026_MS_Cornelius_Imani_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0026_MS_Cornelius_Imani_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_67_68.jpg">
+        <img src="./code/images_2/L__0025_MS_Winter_Santiago_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0025_MS_Winter_Santiago_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_68_69.jpg">
+        <img src="./code/images_2/L__0024_MS_Murray_Lenda_FBB.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0024_MS_Murray_Lenda_FBB.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_69_70.jpg">
+        <img src="./code/images_2/L__0023_MS_Exonerees_Juan_Melendez.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0023_MS_Exonerees_Juan_Melendez.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_70_71.jpg">
+        <img src="./code/images_2/L__0022_MS_Yona_Amit_Holocaust_Survivors_061019_4_Fr11_F.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0022_MS_Yona_Amit_Holocaust_Survivors_061019_4_Fr11_F.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_71_72.jpg">
+        <img src="./code/images_2/L__0021_MS_David_Larry_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0021_MS_David_Larry_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_72_73.jpg">
+        <img src="./code/images_2/L__0020_MS_Exonerees_Damon_Thibodeaux.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0020_MS_Exonerees_Damon_Thibodeaux.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_73_74.jpg">
+        <img src="./code/images_2/L__0019_MS_Arkin_Alan_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0019_MS_Arkin_Alan_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_74_75.jpg">
+        <img src="./code/images_2/L__0018_MS_Exonerees_Bloodsworth_Kirk.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0018_MS_Exonerees_Bloodsworth_Kirk.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_75_76.jpg">
+        <img src="./code/images_2/L__0017_MS_Christopher_Walken.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0017_MS_Christopher_Walken.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_76_77.jpg">
+        <img src="./code/images_2/L__0016_MS_Buffet_Warren_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0016_MS_Buffet_Warren_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_77_78.jpg">
+        <img src="./code/images_2/L__0015_MS_Clint_Eastwood_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0015_MS_Clint_Eastwood_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_78_79.jpg">
+        <img src="./code/images_2/L__0014_MS_Murray_Bill_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0014_MS_Murray_Bill_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_79_80.jpg">
+        <img src="./code/images_2/L__0013_MS_DeNiro_Robert_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0013_MS_DeNiro_Robert_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_80_81.jpg">
+        <img src="./code/images_2/L__0012_MS_Gates_Bill_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0012_MS_Gates_Bill_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_81_82.jpg">
+        <img src="./code/images_2/L__0011_MS_Jack_Nicholson.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0011_MS_Jack_Nicholson.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_82_83.jpg">
+        <img src="./code/images_2/L__0010_MS_Armani_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0010_MS_Armani_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_83_84.jpg">
+        <img src="./code/images_2/L__0009_MS_Valentino_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0009_MS_Valentino_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_84_85.jpg">
+        <img src="./code/images_2/L__0008_MS_Tambor_Jeffery_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0008_MS_Tambor_Jeffery_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_85_86.jpg">
+        <img src="./code/images_2/L__0007_MS_Schmidt_Eric_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0007_MS_Schmidt_Eric_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_86_87.jpg">
+        <img src="./code/images_2/L__0006_MS_Rabbi_Schmuley_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0006_MS_Rabbi_Schmuley_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_87_88.jpg">
+        <img src="./code/images_2/L__0005_MS_Low_Joachim_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0005_MS_Low_Joachim_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_88_89.jpg">
+        <img src="./code/images_2/L__0004_MS_Maffay_Peter_Bild_Zeitung_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0004_MS_Maffay_Peter_Bild_Zeitung_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_89_90.jpg">
+        <img src="./code/images_2/L__0003_Turlington_Christy_MS.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0003_Turlington_Christy_MS.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_90_91.jpg">
+        <img src="./code/images_2/L__0002_MS_Judi_Dench_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0002_MS_Judi_Dench_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_91_92.jpg">
+        <img src="./code/images_2/L__0001_MS_White_Betty_CloseUp.jpg">
+    </div>
+
+    <div class="image-row">
+        <img src="./code/images_2/L__0001_MS_White_Betty_CloseUp.jpg">
+        <img src="./code/mid_way_faces/mid_way_face_92_93.jpg">
+        <img src="./code/images_2/L__0000_MS_Batsheva_Dagan_Holocaust_Survivors.jpg">
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<button class="collapsible">Part 3 -- done</button>
+<div class="content">
+    <p>The code for this is in `a_start3.py`.</p>
+    <p>The video results can be found here ...</p>
+    <p>youtube links ...</p>
+    <p>1by2 with music: https://youtu.be/7lLSLp_FY-E</p>
+    <p>2by3 no music: https://youtu.be/YMR4u9ATedI</p>
+    <p>single sample: https://youtube.com/shorts/_67T6Cf6VCE</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<button class="collapsible">Part 4 -- done</button>
+<div class="content">
+    <p>The code for this part is in `a_start4.py`.</p>
+
+    <div class="box">
+        <p>for this section I picked the immface dataset with the following population ...</p>
+        <div class="image-row">
+            <img src="./code/part2_immface/imm_face_db/01-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/02-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/03-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/04-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/05-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/06-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/07-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/08-1f.jpg">
+            <img src="./code/part2_immface/imm_face_db/09-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/10-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/11-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/12-1f.jpg">
+            <img src="./code/part2_immface/imm_face_db/13-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/14-1f.jpg">
+            <img src="./code/part2_immface/imm_face_db/15-1f.jpg">
+            <img src="./code/part2_immface/imm_face_db/16-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/17-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/18-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/19-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/20-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/21-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/22-1f.jpg">
+            <img src="./code/part2_immface/imm_face_db/23-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/24-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/25-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/26-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/27-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/28-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/29-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/30-1f.jpg">
+            <img src="./code/part2_immface/imm_face_db/31-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/32-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/33-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/34-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/35-1f.jpg">
+            <img src="./code/part2_immface/imm_face_db/36-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/37-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/38-1m.jpg">
+            <img src="./code/part2_immface/imm_face_db/39-1m.jpg">
+        </div>
+        <p>now from this we were given the face labels ...</p>
+        <div class="image-row">
+            <img src="./code/part2_immface/immface_exports/1/01-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/02-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/03-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/04-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/05-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/06-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/07-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/08-1f.jpg">
+            <img src="./code/part2_immface/immface_exports/1/09-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/10-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/11-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/12-1f.jpg">
+            <img src="./code/part2_immface/immface_exports/1/13-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/14-1f.jpg">
+            <img src="./code/part2_immface/immface_exports/1/15-1f.jpg">
+            <img src="./code/part2_immface/immface_exports/1/16-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/17-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/18-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/19-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/20-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/21-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/22-1f.jpg">
+            <img src="./code/part2_immface/immface_exports/1/23-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/24-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/25-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/26-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/27-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/28-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/29-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/30-1f.jpg">
+            <img src="./code/part2_immface/immface_exports/1/31-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/32-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/33-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/34-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/35-1f.jpg">
+            <img src="./code/part2_immface/immface_exports/1/36-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/37-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/38-1m.jpg">
+            <img src="./code/part2_immface/immface_exports/1/39-1m.jpg">
+        </div>
+        <p>then from here we computed the average face shape of the whole population</p>
+        <video src="./videos/4.mp4" autoplay loop muted playsinline></video>
+        <p>the final result is ...</p>
+        <div class="image-row">
+            <img class="img2" src="./code/part2_immface/immface_exports/5/average_shape_annotated.jpg">
+        </div>
+    </div>
+
+    <div class="box">
+        <p>now we then morphed each of the faces in the dataset into the average shape ...</p>
+        <div class="image-row">
+            <img src="./code/part2_immface/immface_exports/6/morphed_1_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_1.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_2_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_2.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_3_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_3.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_4_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_4.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_5_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_5.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_6_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_6.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_7_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_7.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_8_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_8.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_9_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_9.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_10_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_10.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_11_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_11.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_12_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_12.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_13_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_13.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_14_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_14.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_15_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_15.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_16_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_16.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_17_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_17.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_18_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_18.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_19_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_19.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_20_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_20.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_21_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_21.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_22_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_22.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_23_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_23.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_24_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_24.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_25_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_25.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_26_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_26.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_27_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_27.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_28_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_28.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_29_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_29.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_30_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_30.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_31_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_31.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_32_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_32.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_33_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_33.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_34_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_34.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_35_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_35.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_36_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_36.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_37_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_37.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_38_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_38.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_39_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/6/morphed_39.jpg">
+        </div>
+    </div>
+
+    <div class="box">
+        <p>then we compute the average face of the population ... which is ...</p>
+        <div class="image-row">
+            <img src="./code/part2_immface/immface_exports/5/average_shape_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/5/average_faceandshape_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/5/average_face.jpg">
+        </div>
+
+    </div>
+
+    <div class="box">
+        <p>Show the mean image that you got (I described what image I used as me in the overview), as well as ... </p>
+        <p>(1) your face warped into the average geometry</p>
+        <div class="image-row">
+            <img src="./code/part2_immface/immface_exports/7/user_face_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/7/user_face_in_avg_geometry_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/7/user_face_in_avg_geometry.jpg">
+        </div>
+        <p>(2) the average face warped into your geometry</p>
+         <div class="image-row">
+            <img src="./code/part2_immface/immface_exports/8/avg_face_in_user_geometry_annotated.jpg">
+            <img src="./code/part2_immface/immface_exports/8/avg_face_in_user_geometry.jpg">
+        </div>
+    </div>
+
+</div>
+
+
+<button class="collapsible">Part 5 -- done</button>
+<div class="content">
+    <p>The code for this part is in `a_start5.py`.</p>
+
+    <section>
+    <h3>Facial Feature Path Mapping and Example ASF File</h3>
+
+    <h4>Facial Feature Path Mapping</h4>
+    <p>Based on the point paths and observations, we can infer the following mapping between the path numbers and facial features:</p>
+    <ul>
+        <li>path# = 0: Jawline (chin and face contour).</li>
+        <li>path# = 1: Right eyebrow.</li>
+        <li>path# = 2: Left eyebrow.</li>
+        <li>path# = 3: Nose bridge and tip.</li>
+        <li>path# = 4: Right eye.</li>
+        <li>path# = 5: Mouth (lips).</li>
+        <li>path# = 6: Left eye.</li>
+    </ul>
+    <p>This mapping aligns with the 7 point paths mentioned in the description (3 closed paths and 4 open paths). The closed paths are likely the mouth and eyes, while the open paths are the eyebrows, nose, and jawline.</p>
+
+        <p>Now the theory for this part is: $S_{\text {caricature }}=S_{\text {mean }}+\alpha \cdot\left(S_{\text {mase }}-S_{\text {mean }}\right)$</p>
+        <p>When $\alpha>1$ : Exaggerates your features (caricature).</p>
+        <p>When $0<\alpha<1$ : Makes your features closer to the mean.</p>
+        <p>When $\alpha<0$ : Inverts your features relative to the mean.</p>
+        <p>When $\alpha=0$, then $S_{\text {caricature }}=S_{\text {mean }}+0 \cdot\left(S_{\text {user }}-S_{\text {mean }}\right)=S_{\text {mean }}$ i.e. it because the mean which we can see mathematically.</p>
+        <p>...</p>
+        <p>$\alpha<0$ : Inverts your features relative to the mean.</p>
+        <p>$\alpha=0$ : Your face is morphed to the mean face shape.</p>
+        <p>$0<\alpha<1$ : Your face moves closer to the mean face shape, reducing your unique features.</p>
+        <p>$\alpha=1$ : The caricature shape is your original face shape $\left(S_{\text {caricature }}=S_{\text {user }}\right)$.</p>
+        <p>$\alpha>1$ : Exaggerates the differences between your face and the mean, creating a caricature.</p>
+
+
+
+
+    </section>
+
+
+
+
+    <div class="box">
+        <p>here are the results using this technique ...</p>
+        <p>so we know that the mean and user results that we got earlier were ...</p>
+
+        <div class="image-row">
+            <img class="img2" src="./code/part2_immface/immface_exports/5/average_shape_annotated.jpg" alt="Image 1">
+            <img class="img2" src="./code/part2_immface/immface_exports/7/user_face_annotated.jpg" alt="Image 1">
+            <img class="img2" src="./code/part2_immface/immface_exports/7/user_face_in_avg_geometry_annotated.jpg" alt="Image 1">
+            <img class="img2" src="./code/part2_immface/immface_exports/7/user_face_in_avg_geometry.jpg" alt="Image 1">
+        </div>
+
+        <p>now we just apply the formula to create the caricature and we get the following ...</p>
+        <video src="./videos/5.mp4" autoplay loop muted playsinline></video>
+
+        <p>from this you can see that $\alpha>1$ creates ...</p>
+        <div class="image-row">
+            <img class="img2" src="./code/part3_immface_caricature/40.jpeg" alt="Image 1">
+            <img class="img2" src="./code/part3_immface_caricature/50.jpeg" alt="Image 1">
+        </div>
+    </div>
+</div>
+
+
+<button class="collapsible">Mandatory BW  + Extra -- done</button>
+<div class="content">
+    <p>I had to do one mandtory BW ... here are some things that I did.</p>
+    <p>Create a system that could layout points witha accuracy and consistency on faces</p>
+    <p>Did this process on very high resolution photos.</p>
+    <p>Created a theme video centered around Martin Schoeller.</p>
+    <p>Made a video with music and showed the triangulation movement in a visual.</p>
+    <p>Came up with the idea to use what we learned about last time with sharpening to help keep the eyes sharp during the morph, something that really is important in Martin Schoeller images.</p>
+    <p>Manually created the order of the photo to have a nice flow and style</p>
+    <p>Lined up all the photos close enough  by hand and cropped one that had the entire body.</p>
+    <p>Remove the backround of all the photos as well using the masking technique.</p>
+    <p>Also a cool extension of this would be to find the average face and basically do part 2 with this as my tool can place points so would have cool result, but I ran out of time.</p>
+    <p>NOTE: links for video are at the top of the page and also below.</p>
+    <p>The video results can be found here ...</p>
+    <p>youtube links ...</p>
+    <p>1by2 with music: https://youtu.be/7lLSLp_FY-E</p>
+    <p>2by3 no music: https://youtu.be/YMR4u9ATedI</p>
+    <p>single sample: https://youtube.com/shorts/_67T6Cf6VCE</p>
+</div>
+
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
+
+<!--this is for the code look when using ``-->
+<script>
+    // this is the javaScript to replace backtick-wrapped text with a <code> tag
+    document.addEventListener("DOMContentLoaded", function () {
+        // ---> select all paragraphs
+        const paragraphs = document.querySelectorAll("p");
+
+        paragraphs.forEach(paragraph => {
+            // now ... replace backtick wrapped text with a <code> element
+            paragraph.innerHTML = paragraph.innerHTML.replace(/`([^`]+)`/g, function (match, p1) {
+                return `<code>${p1}</code>`;
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>
